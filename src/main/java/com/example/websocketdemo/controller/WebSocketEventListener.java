@@ -1,6 +1,8 @@
 package com.example.websocketdemo.controller;
 
 import com.example.websocketdemo.model.ChatMessage;
+import com.example.websocketdemo.model.MessageAction;
+import com.example.websocketdemo.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,22 +26,34 @@ public class WebSocketEventListener {
 
     @EventListener
     public void handleWebSocketConnectListener(SessionConnectedEvent event) {
-        logger.info("Received a new web socket connection");
+        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
+
+//        User user = (User) headerAccessor.getSessionAttributes().get("user");
+
+//        logger.info("Received a new web socket connection: " + user);
+
     }
 
     @EventListener
     public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
+        sendUserDisconnect(event);
+    }
+
+    private void sendUserDisconnect(SessionDisconnectEvent event){
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
 
-        String username = (String) headerAccessor.getSessionAttributes().get("username");
-        if(username != null) {
-            logger.info("User Disconnected : " + username);
+        User user = (User) headerAccessor.getSessionAttributes().get("user");
+
+        if(user != null) {
+            logger.info("User Disconnected : " + user);
 
             ChatMessage chatMessage = new ChatMessage();
-            chatMessage.setType(ChatMessage.MessageType.LEAVE);
-            chatMessage.setSender(username);
+            chatMessage.setAction(MessageAction.LEFT);
+            chatMessage.setFrom(user);
 
             messagingTemplate.convertAndSend("/topic/public", chatMessage);
         }
     }
+
+
 }

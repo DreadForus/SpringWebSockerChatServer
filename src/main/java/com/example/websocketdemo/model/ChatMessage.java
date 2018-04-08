@@ -1,40 +1,37 @@
 package com.example.websocketdemo.model;
 
-/**
- * Created by rajeevkumarsingh on 24/07/17.
- */
 public class ChatMessage {
-    private MessageType type;
+    private MessageAction action;
     private String content;
-    private String sender;
+    private User from;
 
-    public enum MessageType {
-        CHAT,
-        JOIN,
-        LEAVE
+    public MessageAction getAction() {
+        return action;
     }
-
-    public MessageType getType() {
-        return type;
-    }
-
-    public void setType(MessageType type) {
-        this.type = type;
+    public void setAction(MessageAction action) {
+        this.action = action;
     }
 
     public String getContent() {
         return content;
     }
-
     public void setContent(String content) {
         this.content = content;
     }
 
-    public String getSender() {
-        return sender;
+    public User getFrom() {
+        return from;
+    }
+    public void setFrom(User from) {
+        this.from = from;
     }
 
-    public void setSender(String sender) {
-        this.sender = sender;
+    @Override
+    public String toString() {
+        return "ChatMessage{" +
+                "action=" + action +
+                ", content='" + content + '\'' +
+                ", from=" + from +
+                '}';
     }
 }
