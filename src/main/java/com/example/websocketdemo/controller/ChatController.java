@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,19 +31,5 @@ public class ChatController {
     public List<User> getUsers() {
 
         return userRepository.findAll();
-    }
-
-    @MessageMapping("/chat.addUser")
-    @SendTo("/topic/public")
-    public User addUser(User user, SimpMessageHeaderAccessor headerAccessor) {
-
-        System.out.println(user);
-
-        User existingUser = userRepository.findByUsername(user.getUsername());
-
-        System.out.println(user);
-
-        headerAccessor.getSessionAttributes().put("user", existingUser);
-        return existingUser;
     }
 }
