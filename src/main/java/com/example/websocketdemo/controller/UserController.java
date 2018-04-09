@@ -13,6 +13,7 @@ import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
 import java.util.Random;
 
 @CrossOrigin()
@@ -30,20 +31,20 @@ public class UserController {
 
     private String avatarUrl = "https://api.adorable.io/avatars/285/%d.png";
 
-    @MessageMapping("/authorization.action")
-    @SendToUser("/message/authorization")
+    @MessageMapping("/authorization.user")
+    @SendToUser("/message/authorization.user")
     public User authorizationAction( SimpMessageHeaderAccessor headerAccessor, User user) {
         logger.info(user.toString());
 
-        User existingUser = userRepository.findByName(user.getName());
+        User existingUser = userRepository.findByUsername(user.getUsername());
 
-        System.out.println(existingUser);
+        logger.info("authorization: " + existingUser);
 
         if(existingUser == null){
             int randomInt = new Random().nextInt(1000) + 1;
 
             existingUser = new User();
-            existingUser.setName(user.getName());
+            existingUser.setUsername(user.getUsername());
             existingUser.setAvatar(String.format(avatarUrl, randomInt));
 
             userRepository.save(existingUser);
@@ -60,25 +61,37 @@ public class UserController {
         return existingUser;
     }
 
-    @RequestMapping(value = "/edit", method = RequestMethod.POST)
-    @ResponseBody
-    public User edit(@RequestBody  User user) throws Exception {
-        User existingUser = userRepository.findByName(user.getName());
+    @MessageMapping("/edit.user")
+    @SendToUser("/message/edit.user")
+    public User edit( SimpMessageHeaderAccessor headerAccessor, User user) throws Exception {
+        logger.info(user.toString());
 
-        System.out.println(existingUser);
+        Optional<User> existingUserOptional = userRepository.findById(user.getId());
 
-        if(existingUser == null){
-            throw new Exception();
+        if(existingUserOptional.isPresent()){
+            User existingUser = existingUserOptional.get();
+
+            String previousName = existingUser.getUsername();
+
+            logger.info(existingUser.toString());
+
+            existingUser.setUsername(user.getUsername());
+
+            userRepository.save(existingUser);
+
+            headerAccessor.getSessionAttributes().replace("user", existingUser);
+
+            existingUser.setPreviousName(previousName);
+
+            ChatMessage chatMessage = new ChatMessage();
+            chatMessage.setAction(MessageAction.RENAME);
+            chatMessage.setFrom(existingUser);
+
+            messagingTemplate.convertAndSend("/topic/public", chatMessage);
+
+            return existingUser;
         }
 
-        existingUser.setName(user.getName());
-        userRepository.save(existingUser);
-
-        existingUser.setAction(user.getAction());
-
-        messagingTemplate.convertAndSend("/topic/public", existingUser);
-
-        return existingUser;
+        throw new Exception();
     }
-
 }

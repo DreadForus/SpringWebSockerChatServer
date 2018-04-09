@@ -12,12 +12,15 @@ public class User {
     private String id;
 
     @Indexed(unique = true)
-    private String name;
+    private String username;
 
     private String avatar;
 
     @Transient
     private MessageAction action;
+
+    @Transient
+    private String previousName;
 
     public String getId() {
         return id;
@@ -26,11 +29,11 @@ public class User {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getAvatar() {
@@ -47,11 +50,18 @@ public class User {
         this.action = action;
     }
 
+    public String getPreviousName() {
+        return previousName;
+    }
+    public void setPreviousName(String previousName) {
+        this.previousName = previousName;
+    }
+
     @Override
     public String toString() {
         return "User{" +
                 "id='" + id + '\'' +
-                ", name='" + name + '\'' +
+                ", username='" + username + '\'' +
                 '}';
     }
 }

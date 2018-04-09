@@ -40,7 +40,7 @@ public class ChatController {
 
         System.out.println(user);
 
-        User existingUser = userRepository.findByName(user.getName());
+        User existingUser = userRepository.findByUsername(user.getUsername());
 
         System.out.println(user);
 
