@@ -13,6 +13,7 @@ import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.Optional;
 import java.util.Random;
 
@@ -47,8 +48,10 @@ public class UserController {
             existingUser.setUsername(user.getUsername());
             existingUser.setAvatar(String.format(avatarUrl, randomInt));
 
-            userRepository.save(existingUser);
         }
+
+        existingUser.setLastLogin(new Date());
+        userRepository.save(existingUser);
 
         headerAccessor.getSessionAttributes().put("user", existingUser);
 

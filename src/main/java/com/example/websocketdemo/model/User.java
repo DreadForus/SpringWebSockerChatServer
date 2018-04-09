@@ -5,6 +5,8 @@ import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Date;
+
 @Document(collection = "user")
 public class User {
 
@@ -21,6 +23,8 @@ public class User {
 
     @Transient
     private String previousName;
+
+    private Date lastLogin;
 
     public String getId() {
         return id;
@@ -55,6 +59,13 @@ public class User {
     }
     public void setPreviousName(String previousName) {
         this.previousName = previousName;
+    }
+
+    public Date getLastLogin() {
+        return lastLogin;
+    }
+    public void setLastLogin(Date lastLogin) {
+        this.lastLogin = lastLogin;
     }
 
     @Override
