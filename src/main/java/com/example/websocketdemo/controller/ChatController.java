@@ -1,6 +1,6 @@
 package com.example.websocketdemo.controller;
 
-import com.example.websocketdemo.model.ChatMessage;
+import com.example.websocketdemo.model.Message;
 import com.example.websocketdemo.model.User;
 import com.example.websocketdemo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +23,9 @@ public class ChatController {
 
     @MessageMapping("/chat.sendMessage")
     @SendTo("/topic/public")
-    public ChatMessage sendMessage(@Payload ChatMessage chatMessage) {
-        return chatMessage;
+    public Message sendMessage(@Payload Message message) {
+
+        return message;
     }
 
     @MessageMapping("/chat.getUsers")
