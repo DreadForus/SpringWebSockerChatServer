@@ -17,10 +17,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @CrossOrigin()
 @RestController
@@ -41,8 +39,14 @@ public class UserController {
     private String avatarUrl = "https://api.adorable.io/avatars/285/%d.png";
 
     @SubscribeMapping("/chat.participants")
-    public Collection<User> retrieveParticipants() {
-        return participantRepository.getActiveSessions().values();
+    public Collection<User> retrieveParticipants(SimpMessageHeaderAccessor headerAccessor) {
+        return participantRepository.getActiveSessions()
+            .entrySet()
+            .stream()
+            .filter(entrySet -> !Objects.equals(entrySet.getKey(), headerAccessor.getSessionId()))
+            .map(Map.Entry::getValue)
+            .collect(Collectors.toList())
+        ;
     }
 
     @MessageMapping("/authorization.user")
@@ -74,7 +78,7 @@ public class UserController {
         message.setAction(MessageAction.JOINED);
         message.setFrom(user);
 
-        participantRepository.add(headerAccessor.getSessionId(), user);
+        participantRepository.add(headerAccessor.getSessionId(), existingUser);
 
         messagingTemplate.convertAndSend("/topic/public", message);
 

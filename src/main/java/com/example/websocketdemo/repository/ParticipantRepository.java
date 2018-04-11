@@ -35,8 +35,6 @@ public class ParticipantRepository {
 	}
 
 	public Map<String, User> getActiveSessions() {
-
-		System.out.println(activeSessions);
 		return activeSessions;
 	}
 }

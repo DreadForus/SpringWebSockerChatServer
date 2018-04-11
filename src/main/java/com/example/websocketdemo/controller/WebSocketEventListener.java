@@ -14,11 +14,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
-import java.util.Optional;
-
-/**
- * Created by rajeevkumarsingh on 25/07/17.
- */
 @Component
 public class WebSocketEventListener {
 
@@ -37,7 +32,6 @@ public class WebSocketEventListener {
 //        User user = (User) headerAccessor.getSessionAttributes().get("user");
 
 //        logger.info("Received a new web socket connection: " + user);
-
     }
 
     @EventListener
@@ -60,9 +54,7 @@ public class WebSocketEventListener {
             messagingTemplate.convertAndSend("/topic/public", message);
         }
 
-        Optional.ofNullable(participantRepository.getParticipant(event.getSessionId()))
-            .ifPresent(participant -> participantRepository.removeParticipant(event.getSessionId()))
-        ;
+        participantRepository.removeParticipant(event.getSessionId());
     }
 
 
