@@ -22,6 +22,8 @@ public class User {
     @Indexed(unique = true)
     private String username;
 
+    private String password;
+
     private String avatar;
 
     @Transient

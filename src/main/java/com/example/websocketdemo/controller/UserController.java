@@ -50,14 +50,17 @@ public class UserController {
     public User authorizationAction( SimpMessageHeaderAccessor headerAccessor, User user) {
         logger.info(user.toString());
 
-        User existingUser = userRepository.findByUsername(user.getUsername());
+        Optional<User> existingUserOptional = userRepository.findByUsername(user.getUsername());
+        User existingUser;
 
-        if(existingUser == null){
+        if(!existingUserOptional.isPresent()){
             int randomInt = new Random().nextInt(1000) + 1;
 
             existingUser = new User();
             existingUser.setUsername(user.getUsername());
             existingUser.setAvatar(String.format(avatarUrl, randomInt));
+        }else{
+            existingUser = existingUserOptional.get();
         }
 
         logger.info("authorization: " + existingUser);

@@ -50,8 +50,8 @@ public class WebSocketEventListener {
 
         User user = (User) headerAccessor.getSessionAttributes().get("user");
 
+        logger.info("User Disconnected : " + user);
         if(user != null) {
-            logger.info("User Disconnected : " + user);
 
             Message message = new Message();
             message.setAction(MessageAction.LEFT);
@@ -59,7 +59,6 @@ public class WebSocketEventListener {
 
             messagingTemplate.convertAndSend("/topic/public", message);
         }
-
 
         Optional.ofNullable(participantRepository.getParticipant(event.getSessionId()))
             .ifPresent(participant -> participantRepository.removeParticipant(event.getSessionId()))
