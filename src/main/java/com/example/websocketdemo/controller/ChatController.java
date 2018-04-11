@@ -1,7 +1,6 @@
 package com.example.websocketdemo.controller;
 
 import com.example.websocketdemo.model.Message;
-import com.example.websocketdemo.model.User;
 import com.example.websocketdemo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -11,7 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.List;
+import static com.example.websocketdemo.config.WebSocketConfig.CHAT_SEND_MESSAGE;
+import static com.example.websocketdemo.config.WebSocketConfig.TOPIC_PUBLIC;
 
 @CrossOrigin(origins = "*")
 @Controller
@@ -21,16 +21,10 @@ public class ChatController {
     @Autowired
     private UserRepository userRepository;
 
-    @MessageMapping("/chat.sendMessage")
-    @SendTo("/topic/public")
+    @MessageMapping(CHAT_SEND_MESSAGE)
+    @SendTo(TOPIC_PUBLIC)
     public Message sendMessage(@Payload Message message) {
 
         return message;
-    }
-
-    @MessageMapping("/chat.getUsers")
-    public List<User> getUsers() {
-
-        return userRepository.findAll();
     }
 }

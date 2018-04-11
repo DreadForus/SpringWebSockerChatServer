@@ -11,6 +11,9 @@ import org.springframework.web.socket.server.support.HttpSessionHandshakeInterce
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
+    public static final String CHAT_SEND_MESSAGE = "/chat.sendMessage";
+    public static final String CHAT_PARTICIPANTS = "/chat.participants";
+    public static final String TOPIC_PUBLIC = "/topic/public";
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
