@@ -18,7 +18,7 @@ public class Message {
     @Id
     private String id;
 
-    private MessageAction action;
+    private ChatAction action;
     private String content;
 
     private User from;

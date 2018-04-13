@@ -1,7 +1,7 @@
 package com.example.websocketdemo.controller;
 
+import com.example.websocketdemo.model.ChatAction;
 import com.example.websocketdemo.model.Message;
-import com.example.websocketdemo.model.MessageAction;
 import com.example.websocketdemo.model.User;
 import com.example.websocketdemo.repository.ParticipantRepository;
 import com.example.websocketdemo.repository.UserRepository;
@@ -75,7 +75,7 @@ public class UserController {
         headerAccessor.getSessionAttributes().put("user", existingUser);
 
         Message message = new Message();
-        message.setAction(MessageAction.JOINED);
+        message.setAction(ChatAction.JOINED);
         message.setFrom(user);
 
         participantRepository.add(headerAccessor.getSessionId(), existingUser);
@@ -108,7 +108,7 @@ public class UserController {
             existingUser.setPreviousName(previousName);
 
             Message message = new Message();
-            message.setAction(MessageAction.RENAME);
+            message.setAction(ChatAction.RENAME);
             message.setFrom(existingUser);
 
             messagingTemplate.convertAndSend("/topic/public", message);

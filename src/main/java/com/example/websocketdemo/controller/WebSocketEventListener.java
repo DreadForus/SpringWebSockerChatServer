@@ -1,7 +1,7 @@
 package com.example.websocketdemo.controller;
 
 import com.example.websocketdemo.model.Message;
-import com.example.websocketdemo.model.MessageAction;
+import com.example.websocketdemo.model.ChatAction;
 import com.example.websocketdemo.model.User;
 import com.example.websocketdemo.repository.ParticipantRepository;
 import org.slf4j.Logger;
@@ -48,7 +48,7 @@ public class WebSocketEventListener {
         if(user != null) {
 
             Message message = new Message();
-            message.setAction(MessageAction.LEFT);
+            message.setAction(ChatAction.LEFT);
             message.setFrom(user);
 
             messagingTemplate.convertAndSend("/topic/public", message);

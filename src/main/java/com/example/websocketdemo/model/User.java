@@ -27,7 +27,7 @@ public class User {
     private String avatar;
 
     @Transient
-    private MessageAction action;
+    private ChatAction action;
 
     @Transient
     private String previousName;
