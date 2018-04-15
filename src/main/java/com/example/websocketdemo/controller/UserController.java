@@ -54,7 +54,7 @@ public class UserController {
     public User authorizationAction( SimpMessageHeaderAccessor headerAccessor, User user) {
         logger.info(user.toString());
 
-        Optional<User> existingUserOptional = userRepository.findByUsername(user.getUsername());
+        Optional<User> existingUserOptional = userRepository.findOptionalByUsername(user.getUsername());
         User existingUser;
 
         if(!existingUserOptional.isPresent()){
