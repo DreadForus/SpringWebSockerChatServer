@@ -15,6 +15,19 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 
         response.setStatus(HttpStatus.OK.value());
-//        response.sendRedirect(request.getContextPath() + "/index");
+
+        response.setContentType("application/json;charset=UTF-8");
+        response.setHeader("Cache-Control", "no-cache");
+        String JSON_VALUE = "{\"%s\": %s}";
+
+        response.getWriter().write(String.format(JSON_VALUE, "success", "true"));
+    }
+
+    public void sendJsonResponse(HttpServletResponse response, String key, String message) throws IOException {
+        response.setContentType("application/json;charset=UTF-8");
+        response.setHeader("Cache-Control", "no-cache");
+        String JSON_VALUE = "{\"%s\": %s}";
+
+        response.getWriter().write(String.format(JSON_VALUE, key, message));
     }
 }
